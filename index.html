@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Demo</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	</head>
+	<body>
+		<div id="container"></div>
+		<div id="speedometer"></div>
+ 		<!-- <script src="./lib/three.js"></script> -->
+		<!-- <script src="./lib/ammo.js"></script> -->
+		<script src="./lib/jquery-3.1.1.min.js"></script>
+		<script src="./lib/preloadjs-0.6.2.min.js"></script>
+		<!-- <script src="./lib/keymaster.js"></script> -->
+		<!-- <script src="./lib/stats.min.js"></script> -->
+		<script src="http://aicdg.com/learn-ammojs/js/libs/stats.min.js"></script>
+		<!-- <script src="./lib/Detector.js"></script> -->
+		<script src="http://aicdg.com/learn-ammojs/js/Detector.js"></script>
+		<!-- <script src="./3dgame5.js"></script> -->
+
+		<script>
+			function loadScript(url, callback, fail) {
+				var script = document.createElement ("script");
+				script.type = "text/javascript";
+
+				if (script.readyState) { //IE
+					script.onreadystatechange = function() {
+						if (script.readyState == "loaded"
+						 || script.readyState == "complete") {
+							script.onreadystatechange = null;
+							callback(url);
+						} else {
+							fail(url);
+						}
+					}
+				} else { //Others
+					script.onload = function() {
+						callback(url);
+					}
+					script.onerror = function() {
+						fail(url);
+					}
+				}
+				script.src = url;
+				document.getElementsByTagName("head")[0].appendChild(script);
+			}
+			function loadthree() {
+				// loadScript("./lib/three.js", function(url) {
+				loadScript("http://aicdg.com/learn-ammojs/js/three.js", function(url) {
+					console.log("loaded, url = " + url);
+					loadammo();
+				}, function(url){
+					console.log('fail, ' + url);
+					loadthree();
+				});
+			}
+			function loadammo() {
+				// loadScript("./lib/ammo.js", function(url) {
+				loadScript("http://aicdg.com/learn-ammojs/js/libs/ammo.js", function(url) {
+					console.log("loaded, url = " + url);
+					// go();
+					loadcontrol();
+				}, function(url){
+					console.log('fail, ' + url);
+					loadammo();
+				});
+			}
+			function loadcontrol() {
+				// loadScript("./lib/OrbitControls.js", function(url){
+				loadScript("http://aicdg.com/learn-ammojs/js/controls/OrbitControls.js", function(url){
+					loadgame();
+				}, function(url){
+					console.log('fail, ' + url);
+					loadcontrol();
+				})
+			}
+			function loadgame() {
+				loadScript("./3dgame5.js", function(url) {
+					init();
+					animate();
+				}, function(url){
+					console.log('fail, ' + url);
+					loadgame();
+				});
+			}
+
+			loadthree();
+			// go();
+
+			function go () {
+				var game;
+				window.onload = function(e){
+					var container = document.getElementById('container');
+					game = new game3d(container);
+					game.load(progress, complete);
+				};
+				function progress(e){
+					console.log('progress:', e);
+				}
+				function complete(e){
+					console.log('complete:', e);
+					game.ready();
+				}
+			}
+		</script>
+
+
+	</body>
+</html>
+
